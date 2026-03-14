@@ -1,35 +1,32 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 
-function Login() {
-  const [username, setUsername] = useState("");
+function ResetPassword() {
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { token } = useParams();
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      return setError("Passwords do not match.");
+    }
+
     setIsLoading(true);
+    setMessage("");
     setError("");
 
     try {
-      const res = await api.post("/auth/login", {
-        username,
-        password,
-      });
-
-      localStorage.setItem("token", res.data.token);
-      navigate("/dashboard");
+      const res = await api.post(`/auth/reset-password/${token}`, { password });
+      setMessage(res.data.msg);
+      setTimeout(() => navigate("/"), 3000);
     } catch (err) {
-      if (err.response) {
-        setError(err.response.data.msg || "Server error. Please try again.");
-      } else if (err.request) {
-        setError("Network error. Cannot reach the server.");
-      } else {
-        setError("An unexpected error occurred.");
-      }
+      setError(err.response?.data?.msg || "Error resetting password. Link may be invalid or expired.");
     } finally {
       setIsLoading(false);
     }
@@ -40,49 +37,48 @@ function Login() {
       <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 tracking-tight">
-            Portfolio Admin
+            Reset Password
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Sign in to manage your content
+            Enter your new password below
           </p>
         </div>
-        
+
+        {message && (
+          <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-md">
+            <p className="text-sm text-green-700">{message}. Redirecting to login...</p>
+          </div>
+        )}
+
         {error && (
           <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
             <p className="text-sm text-red-700">{error}</p>
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-          <div className="rounded-md shadow-sm space-y-4">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-              <input
-                type="text"
-                required
-                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-gray-50"
-                placeholder="Enter username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
               <input
                 type="password"
                 required
                 className="appearance-none relative block w-full px-3 py-3 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-gray-50"
-                placeholder="Enter password"
+                placeholder="Enter new password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <div className="flex items-center justify-end">
-              <div className="text-sm">
-                <a href="/forgot-password" title="Forgot Password" className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Forgot your password?
-                </a>
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+              <input
+                type="password"
+                required
+                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-gray-50"
+                placeholder="Confirm new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
             </div>
           </div>
 
@@ -92,7 +88,7 @@ function Login() {
               disabled={isLoading}
               className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:bg-indigo-400"
             >
-              {isLoading ? "Signing in..." : "Sign in"}
+              {isLoading ? "Resetting..." : "Reset Password"}
             </button>
           </div>
         </form>
@@ -101,4 +97,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default ResetPassword;
