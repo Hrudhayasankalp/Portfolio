@@ -23,10 +23,10 @@ function ResetPassword() {
 
     try {
       const res = await api.post(`/auth/reset-password/${token}`, { password });
-      setMessage(res.data.msg);
+      setMessage(res.data.message);
       setTimeout(() => navigate("/"), 3000);
     } catch (err) {
-      setError(err.response?.data?.msg || "Error resetting password. Link may be invalid or expired.");
+      setError(err.response?.data?.message || err.response?.data?.msg || "Error resetting password. Link may be invalid or expired.");
     } finally {
       setIsLoading(false);
     }

@@ -15,9 +15,9 @@ function ForgotPassword() {
 
     try {
       const res = await api.post("/auth/forgot-password", { email });
-      setMessage(res.data.msg);
+      setMessage(res.data.message);
     } catch (err) {
-      setError(err.response?.data?.msg || "Error sending email. Please try again.");
+      setError(err.response?.data?.message || err.response?.data?.msg || "Error sending email. Please try again.");
     } finally {
       setIsLoading(false);
     }

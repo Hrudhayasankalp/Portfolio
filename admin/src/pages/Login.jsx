@@ -24,7 +24,7 @@ function Login() {
       navigate("/dashboard");
     } catch (err) {
       if (err.response) {
-        setError(err.response.data.msg || "Server error. Please try again.");
+        setError(err.response.data.message || err.response.data.msg || "Server error. Please try again.");
       } else if (err.request) {
         setError("Network error. Cannot reach the server.");
       } else {

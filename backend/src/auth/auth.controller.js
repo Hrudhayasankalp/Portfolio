@@ -10,9 +10,9 @@ exports.register = async (req, res) => {
   try {
     const hash = await bcrypt.hash(password, 10);
     const admin = await Admin.create({ username, password: hash, email });
-    res.json({ msg: "Admin created", admin });
+    res.json({ message: "Admin created", admin });
   } catch (err) {
-    res.status(400).json({ msg: "Registration failed", error: err.message });
+    res.status(400).json({ message: "Registration failed", error: err.message });
   }
 };
 
@@ -20,10 +20,10 @@ exports.login = async (req, res) => {
   const { username, password } = req.body;
 
   const admin = await Admin.findOne({ username });
-  if (!admin) return res.status(401).json({ msg: "Invalid credentials" });
+  if (!admin) return res.status(401).json({ message: "Invalid credentials" });
 
   const match = await bcrypt.compare(password, admin.password);
-  if (!match) return res.status(401).json({ msg: "Invalid credentials" });
+  if (!match) return res.status(401).json({ message: "Invalid credentials" });
 
   const token = jwt.sign(
     { id: admin._id, role: "admin" },
@@ -40,7 +40,7 @@ exports.forgotPassword = async (req, res) => {
   try {
     const admin = await Admin.findOne({ email });
     if (!admin) {
-      return res.status(404).json({ msg: "No account with that email address exists." });
+      return res.status(404).json({ message: "No account with that email address exists." });
     }
 
     const token = crypto.randomBytes(20).toString("hex");
@@ -70,10 +70,10 @@ exports.forgotPassword = async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
-    res.json({ msg: "An e-mail has been sent to " + admin.email + " with further instructions." });
+    res.json({ message: "An e-mail has been sent to " + admin.email + " with further instructions." });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: "Error in forgot password process", error: err.message });
+    res.status(500).json({ message: "Error in forgot password process", error: err.message });
   }
 };
 
@@ -85,7 +85,7 @@ exports.resetPassword = async (req, res) => {
     });
 
     if (!admin) {
-      return res.status(400).json({ msg: "Password reset token is invalid or has expired." });
+      return res.status(400).json({ message: "Password reset token is invalid or has expired." });
     }
 
     const { password } = req.body;
@@ -94,8 +94,8 @@ exports.resetPassword = async (req, res) => {
     admin.resetPasswordExpires = undefined;
 
     await admin.save();
-    res.json({ msg: "Success! Your password has been changed." });
+    res.json({ message: "Success! Your password has been changed." });
   } catch (err) {
-    res.status(500).json({ msg: "Error resetting password", error: err.message });
+    res.status(500).json({ message: "Error resetting password", error: err.message });
   }
 };
