@@ -32,7 +32,7 @@ const Contact = () => {
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl md:text-6xl font-extrabold mb-6"
+          className="text-3xl md:text-6xl font-extrabold mb-6"
         >
           Get in <span className="text-gradient">Touch</span>
         </motion.h1>
@@ -40,44 +40,44 @@ const Contact = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-gray-400 text-lg lg:text-xl max-w-2xl mx-auto"
+          className="text-gray-400 text-base md:text-xl max-w-2xl mx-auto px-4"
         >
           Whether you have a question, a project idea, or just want to say hi,
           I'll try my best to get back to you!
         </motion.p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-12 lg:gap-24 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-24 items-start px-4">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           className="space-y-12"
         >
-          <div className="glass-card p-8 rounded-2xl relative overflow-hidden group">
+          <div className="glass-card p-6 md:p-8 rounded-2xl relative overflow-hidden group">
             <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 group-hover:bg-purple-500 transition-colors"></div>
-            <h3 className="text-2xl font-bold text-white mb-2">Let's talk</h3>
-            <p className="text-gray-400 mb-8 leading-relaxed">
+            <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Let's talk</h3>
+            <p className="text-sm md:text-base text-gray-400 mb-8 leading-relaxed">
               I'm constantly looking for new opportunities and interesting projects to collaborate on.
             </p>
 
             <div className="space-y-6">
               <div className="flex items-center gap-4 text-gray-300">
-                <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-xl text-blue-400">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center text-lg md:text-xl text-blue-400">
                   📧
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Email</h4>
-                  <a href="mailto:hrudayasankalp@gmail.com" className="text-lg hover:text-white transition-colors">hrudayasankalp@gmail.com</a>
+                  <h4 className="text-[10px] md:text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Email</h4>
+                  <a href="mailto:hrudayasankalp@gmail.com" className="text-base md:text-lg hover:text-white transition-colors">hrudayasankalp@gmail.com</a>
                 </div>
               </div>
               <div className="flex items-center gap-4 text-gray-300">
-                <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-xl text-purple-400">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center text-lg md:text-xl text-purple-400">
                   📍
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Location</h4>
-                  <p className="text-lg">Available Worldwide (Remote)</p>
+                  <h4 className="text-[10px] md:text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Location</h4>
+                  <p className="text-base md:text-lg">Available Worldwide (Remote)</p>
                 </div>
               </div>
             </div>

@@ -49,7 +49,7 @@ const Projects = () => {
         <motion.h1 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl md:text-5xl font-extrabold mb-6"
+          className="text-3xl md:text-5xl font-extrabold mb-6"
         >
           Featured <span className="text-gradient">Projects</span>
         </motion.h1>
@@ -57,7 +57,7 @@ const Projects = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-gray-400 text-lg lg:text-xl"
+          className="text-gray-400 text-base md:text-xl px-4"
         >
           Explore my recent work, showcasing my skills in full-stack development, 
           UI/UX design, and problem-solving.
@@ -94,7 +94,7 @@ const Projects = () => {
       ) : (
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 px-4"
         >
           <AnimatePresence>
             {filteredProjects.map((project, index) => (
@@ -124,10 +124,10 @@ const Projects = () => {
                 </div>
                 
                 <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
                     {project.title}
                   </h3>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
+                  <p className="text-gray-400 text-xs md:text-sm leading-relaxed mb-6 flex-grow">
                     {project.description}
                   </p>
                   

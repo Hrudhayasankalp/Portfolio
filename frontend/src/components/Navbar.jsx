@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -30,6 +31,11 @@ const Navbar = () => {
     }
   }, [location, location.key]); // Added location.key to trigger even on same hash clicks
 
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname, location.hash]);
+
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Skills", path: "/#skills" },
@@ -42,7 +48,7 @@ const Navbar = () => {
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? "glass py-4 shadow-lg" : "bg-transparent py-4 md:py-6"
+        scrolled || isMobileMenuOpen ? "glass py-4 shadow-lg" : "bg-transparent py-4 md:py-6"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -84,13 +90,58 @@ const Navbar = () => {
 
         {/* Mobile Nav Toggle */}
         <div className="md:hidden flex items-center">
-          <button className="text-gray-300 hover:text-white">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="text-gray-300 hover:text-white focus:outline-none p-2"
+            aria-label="Toggle Menu"
+          >
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {isMobileMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              )}
             </svg>
           </button>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden glass border-t border-gray-800 overflow-hidden"
+          >
+            <div className="px-4 py-6 space-y-4 flex flex-col items-center">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className={`text-lg font-medium transition-colors ${
+                    location.pathname === link.path || (location.pathname === '/' && location.hash === link.path.substring(1))
+                      ? "text-blue-500"
+                      : "text-gray-300 hover:text-white"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full max-w-[200px] text-center px-5 py-3 rounded-xl border border-gray-700 bg-gray-800/50 text-white font-medium"
+              >
+                Resume
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
