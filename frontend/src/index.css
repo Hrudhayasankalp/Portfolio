@@ -5,14 +5,19 @@
   color-scheme: light dark;
 }
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
   display: block;
   min-width: 320px;
   min-height: 100vh;
   background-color: #0f172a; /* slate-900 */
   color: #f8fafc; /* slate-50 */
-  overflow-x: hidden;
 }
 
 /* Custom Scrollbar */

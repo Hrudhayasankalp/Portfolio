@@ -43,9 +43,9 @@ const Home = () => {
   return (
     <div className="space-y-32">
       {/* Hero Section */}
-      <section className="min-h-[80vh] flex flex-col justify-center relative">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+      <section className="min-h-[80vh] flex flex-col justify-center relative overflow-hidden px-4">
+        <div className="absolute top-1/4 left-1/4 w-72 md:w-96 h-72 md:h-96 bg-blue-500/20 rounded-full blur-[100px] md:blur-[120px] -z-10 pointer-events-none"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-72 md:w-96 h-72 md:h-96 bg-purple-500/20 rounded-full blur-[100px] md:blur-[120px] -z-10 pointer-events-none"></div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -57,7 +57,7 @@ const Home = () => {
             <h2 className="text-lg md:text-2xl font-medium text-blue-400">
               Hello, I'm
             </h2>
-            <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-7xl font-extrabold tracking-tight break-words">
               {profile?.name || "Developer"}
             </h1>
             <h3 className="text-2xl md:text-5xl font-bold text-gradient pb-2">
