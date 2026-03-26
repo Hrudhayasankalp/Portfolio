@@ -10,8 +10,8 @@ exports.sendMessage = async (req, res, next) => {
       
       const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
-        port: 465,
-        secure: true, // Use SSL
+        port: 587,     // Cloud free-tiers often block port 465, 587 is highly recommended
+        secure: false, // Use STARTTLS instead of implicit SSL for 587
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
@@ -30,16 +30,16 @@ exports.sendMessage = async (req, res, next) => {
       try {
         const info = await transporter.sendMail(mailOptions);
         console.log("✅ Email sent successfully:", info.messageId);
+        return res.status(201).json({ ...msg.toObject(), emailStatus: "sent" });
       } catch (mailErr) {
         console.error("❌ Email sending failed:", mailErr);
-        // We still return 201 because the database record was created,
-        // but we log the error so the developer knows why the email didn't arrive.
+        // Explicitly return the Nodemailer error back to the frontend to debug Render issue
+        return res.status(500).json({ error: `Nodemailer failed: ${mailErr.message}` });
       }
     } else {
       console.warn("⚠️ EMAIL_USER or EMAIL_PASS not set in environment variables. Skipping email notification.");
+      return res.status(500).json({ error: "EMAIL_USER or EMAIL_PASS not found on server." });
     }
-
-    res.status(201).json(msg);
   } catch (err) {
     console.error("🔥 Error in sendMessage:", err);
     err.statusCode = 400;
