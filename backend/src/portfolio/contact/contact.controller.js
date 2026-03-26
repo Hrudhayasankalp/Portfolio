@@ -1,5 +1,10 @@
 const Contact = require("./contact.model");
 const nodemailer = require("nodemailer");
+const dns = require("dns");
+
+// FORCE IPv4 for Render servers! Render's free tier has buggy outbound IPv6 
+// which causes ENETUNREACH when connecting to smtp.gmail.com via IPv6
+dns.setDefaultResultOrder("ipv4first");
 
 exports.sendMessage = async (req, res, next) => {
   try {
