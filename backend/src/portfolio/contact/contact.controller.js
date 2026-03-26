@@ -16,16 +16,22 @@ exports.sendMessage = async (req, res, next) => {
 
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       console.log(`📧 Attempting to send email from ${process.env.EMAIL_USER} to hrudayasankalp@gmail.com`);
+
+      // Resolve IPv4 dynamically to avoid Render's buggy IPv6 routing (ENETUNREACH)
+      const dnsPromises = require("dns").promises;
+      const { address: ipv4Host } = await dnsPromises.lookup("smtp.gmail.com", { family: 4 });
       
       const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,     // Cloud free-tiers often block port 465, 587 is highly recommended
-        secure: false, // Use STARTTLS instead of implicit SSL for 587
-        family: 4,     // Force Node.js to use IPv4 only, ignoring buggy IPv6 routes completely
+        host: ipv4Host,
+        port: 587,
+        secure: false, // Use STARTTLS
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
         },
+        tls: {
+          servername: "smtp.gmail.com", // Important for SSL verification when using an IP
+        }
       });
 
       const mailOptions = {
