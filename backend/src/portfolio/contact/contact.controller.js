@@ -6,6 +6,8 @@ exports.sendMessage = async (req, res, next) => {
     const msg = await Contact.create(req.body);
 
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      console.log(`📧 Attempting to send email from ${process.env.EMAIL_USER} to hrudayasankalp@gmail.com`);
+      
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -15,17 +17,30 @@ exports.sendMessage = async (req, res, next) => {
       });
 
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: `"${msg.name}" <${process.env.EMAIL_USER}>`,
         to: "hrudayasankalp@gmail.com",
+        replyTo: msg.email,
         subject: `New Portfolio Message from ${msg.name}`,
         text: `Name: ${msg.name}\nEmail: ${msg.email}\n\nMessage:\n${msg.message}`,
+        priority: 'high',
       };
 
-      await transporter.sendMail(mailOptions);
+      try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log("✅ Email sent successfully:", info.messageId);
+        return res.status(201).json({ ...msg.toObject(), emailStatus: "sent" });
+      } catch (mailErr) {
+        console.error("❌ Email sending failed:", mailErr);
+        // Return 500 error so the frontend is aware the email failed
+        return res.status(500).json({ message: "Message saved, but failed to send email.", error: mailErr.message });
+      }
+    } else {
+      console.warn("⚠️ EMAIL_USER or EMAIL_PASS not set in environment variables. Skipping email notification.");
+      // Return 500 error so developer is aware it was skipped due to missing config
+      return res.status(500).json({ message: "Message saved, but email skipped due to missing server configuration." });
     }
-
-    res.status(201).json(msg);
   } catch (err) {
+    console.error("🔥 Error in sendMessage:", err);
     err.statusCode = 400;
     next(err);
   }

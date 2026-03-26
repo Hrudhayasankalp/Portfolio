@@ -1,36 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+require("dotenv").config({ path: "./.env" });
+const Contact = require("./src/portfolio/contact/contact.model");
 
-const MONGO_URI = "mongodb+srv://234g1a0558_db_user:Psankalp%401605@portfolio.flhhbeu.mongodb.net/?appName=portfolio";
-
-const ProfileSchema = new mongoose.Schema({
-  name: String,
-  role: String,
-  bio: String
-});
-const Profile = mongoose.model('Profile', ProfileSchema);
-
-async function checkDB() {
+async function checkMessages() {
   try {
-    await mongoose.connect(MONGO_URI);
-    console.log("Connected to MongoDB");
-    
-    const profile = await Profile.findOne();
-    if (profile) {
-      console.log("DATA_FOUND: Profile exists in DB:", JSON.stringify(profile));
-    } else {
-      console.log("DATA_NOT_FOUND: No profile found in DB.");
-    }
-    
-    const SkillSchema = new mongoose.Schema({ name: String });
-    const Skill = mongoose.model('Skill', SkillSchema);
-    const skills = await Skill.find();
-    console.log("SKILLS_COUNT:", skills.length);
-
-    await mongoose.disconnect();
-  } catch (err) {
-    console.error("ERROR checking DB:", err);
-    process.exit(1);
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ Connected to MongoDB");
+    const messages = await Contact.find().sort({ createdAt: -1 }).limit(5);
+    console.log("Total messages in DB:", await Contact.countDocuments());
+    console.log("Recent messages:", JSON.stringify(messages, null, 2));
+    await mongoose.connection.close();
+  } catch (error) {
+    console.error("❌ Database check failed:", error);
   }
 }
 
-checkDB();
+checkMessages();
