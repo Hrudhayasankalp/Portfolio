@@ -21,8 +21,6 @@ const Contact = () => {
       setTimeout(() => setStatus("idle"), 5000);
     } catch (error) {
       console.error("Error sending message:", error);
-      const serverMsg = error.response?.data?.error || error.response?.data?.message || error.message;
-      alert(`Backend Error: ${serverMsg}. Please take a screenshot of this error.`);
       setStatus("error");
       setTimeout(() => setStatus("idle"), 5000);
     }
