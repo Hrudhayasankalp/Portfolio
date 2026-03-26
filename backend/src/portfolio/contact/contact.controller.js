@@ -2,9 +2,13 @@ const Contact = require("./contact.model");
 const nodemailer = require("nodemailer");
 const dns = require("dns");
 
-// FORCE IPv4 for Render servers! Render's free tier has buggy outbound IPv6 
-// which causes ENETUNREACH when connecting to smtp.gmail.com via IPv6
-dns.setDefaultResultOrder("ipv4first");
+try {
+  if (typeof dns.setDefaultResultOrder === "function") {
+    dns.setDefaultResultOrder("ipv4first");
+  }
+} catch (e) {
+  console.log("IPv4 defaulting not supported");
+}
 
 exports.sendMessage = async (req, res, next) => {
   try {
@@ -17,6 +21,7 @@ exports.sendMessage = async (req, res, next) => {
         host: "smtp.gmail.com",
         port: 587,     // Cloud free-tiers often block port 465, 587 is highly recommended
         secure: false, // Use STARTTLS instead of implicit SSL for 587
+        family: 4,     // Force Node.js to use IPv4 only, ignoring buggy IPv6 routes completely
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
