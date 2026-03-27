@@ -8,14 +8,16 @@ exports.sendMessage = async (req, res, next) => {
     const serviceId = process.env.EMAILJS_SERVICE_ID?.trim();
     const templateId = process.env.EMAILJS_TEMPLATE_ID?.trim();
     const publicKey = process.env.EMAILJS_PUBLIC_KEY?.trim();
+    const privateKey = process.env.EMAILJS_PRIVATE_KEY?.trim();
 
-    if (serviceId && templateId && publicKey) {
+    if (serviceId && templateId && publicKey && privateKey) {
       console.log(`📧 Attempting to send email via EmailJS for ${msg.email}`);
 
       const emailData = {
         service_id: serviceId,
         template_id: templateId,
         user_id: publicKey,
+        accessToken: privateKey,
         template_params: {
           name: msg.name,
           email: msg.email,
