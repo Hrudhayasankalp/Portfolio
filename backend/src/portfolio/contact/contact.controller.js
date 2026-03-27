@@ -1,50 +1,50 @@
 const Contact = require("./contact.model");
-const nodemailer = require("nodemailer");
-const dns = require("dns");
-
-try {
-  if (typeof dns.setDefaultResultOrder === "function") {
-    dns.setDefaultResultOrder("ipv4first");
-  }
-} catch (e) {
-  console.log("IPv4 defaulting not supported");
-}
 
 exports.sendMessage = async (req, res, next) => {
   try {
     const msg = await Contact.create(req.body);
 
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-      console.log(`📧 Attempting to send email from ${process.env.EMAIL_USER} to hrudayasankalp@gmail.com`);
+    const serviceId = process.env.EMAILJS_SERVICE_ID;
+    const templateId = process.env.EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.EMAILJS_PUBLIC_KEY;
 
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
+    if (serviceId && templateId && publicKey) {
+      console.log(`📧 Attempting to send email via EmailJS for ${msg.email}`);
 
-      const mailOptions = {
-        from: `"${msg.name}" <${process.env.EMAIL_USER}>`,
-        to: "hrudayasankalp@gmail.com",
-        replyTo: msg.email,
-        subject: `New Portfolio Message from ${msg.name}`,
-        text: `Name: ${msg.name}\nEmail: ${msg.email}\n\nMessage:\n${msg.message}`,
-        priority: 'high',
+      const emailData = {
+        service_id: serviceId,
+        template_id: templateId,
+        user_id: publicKey,
+        template_params: {
+          name: msg.name,
+          email: msg.email,
+          message: msg.message,
+        }
       };
 
       try {
-        const info = await transporter.sendMail(mailOptions);
-        console.log("✅ Email sent successfully:", info.messageId);
+        const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(emailData)
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`EmailJS API error: ${response.status} ${errorText}`);
+        }
+
+        console.log("✅ Email sent successfully via EmailJS!");
       } catch (mailErr) {
         console.error("❌ Email sending failed:", mailErr.message);
-        const err = new Error("Email sending failed. Check backend environment variables.");
+        const err = new Error("Email sending failed. Plase verify your EmailJS API keys.");
         err.statusCode = 500;
         throw err;
       }
     } else {
-      console.warn("⚠️ EMAIL_USER or EMAIL_PASS not set in environment variables.");
+      console.warn("⚠️ EmailJS API keys are missing from the environment variables.");
       const err = new Error("Email credentials not configured on the server.");
       err.statusCode = 500;
       throw err;
