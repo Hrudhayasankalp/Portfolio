@@ -1,12 +1,13 @@
 const Contact = require("./contact.model");
+const axios = require("axios");
 
 exports.sendMessage = async (req, res, next) => {
   try {
     const msg = await Contact.create(req.body);
 
-    const serviceId = process.env.EMAILJS_SERVICE_ID;
-    const templateId = process.env.EMAILJS_TEMPLATE_ID;
-    const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+    const serviceId = process.env.EMAILJS_SERVICE_ID?.trim();
+    const templateId = process.env.EMAILJS_TEMPLATE_ID?.trim();
+    const publicKey = process.env.EMAILJS_PUBLIC_KEY?.trim();
 
     if (serviceId && templateId && publicKey) {
       console.log(`📧 Attempting to send email via EmailJS for ${msg.email}`);
@@ -23,22 +24,10 @@ exports.sendMessage = async (req, res, next) => {
       };
 
       try {
-        const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(emailData)
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`EmailJS API error: ${response.status} ${errorText}`);
-        }
-
+        await axios.post("https://api.emailjs.com/api/v1.0/email/send", emailData);
         console.log("✅ Email sent successfully via EmailJS!");
       } catch (mailErr) {
-        console.error("❌ Email sending failed:", mailErr.message);
+        console.error("❌ Email sending failed:", mailErr.response?.data || mailErr.message);
         const err = new Error("Email sending failed. Plase verify your EmailJS API keys.");
         err.statusCode = 500;
         throw err;
