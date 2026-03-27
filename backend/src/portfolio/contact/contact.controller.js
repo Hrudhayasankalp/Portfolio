@@ -22,6 +22,9 @@ exports.sendMessage = async (req, res, next) => {
           name: msg.name,
           email: msg.email,
           message: msg.message,
+          from_name: msg.name,
+          from_email: msg.email,
+          reply_to: msg.email
         }
       };
 
