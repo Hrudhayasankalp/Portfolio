@@ -17,21 +17,12 @@ exports.sendMessage = async (req, res, next) => {
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       console.log(`📧 Attempting to send email from ${process.env.EMAIL_USER} to hrudayasankalp@gmail.com`);
 
-      // Resolve IPv4 dynamically to avoid Render's buggy IPv6 routing (ENETUNREACH)
-      const dnsPromises = require("dns").promises;
-      const { address: ipv4Host } = await dnsPromises.lookup("smtp.gmail.com", { family: 4 });
-      
       const transporter = nodemailer.createTransport({
-        host: ipv4Host,
-        port: 587,
-        secure: false, // Use STARTTLS
+        service: "gmail",
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
         },
-        tls: {
-          servername: "smtp.gmail.com", // Important for SSL verification when using an IP
-        }
       });
 
       const mailOptions = {
@@ -47,17 +38,23 @@ exports.sendMessage = async (req, res, next) => {
         const info = await transporter.sendMail(mailOptions);
         console.log("✅ Email sent successfully:", info.messageId);
       } catch (mailErr) {
-        console.error("❌ Email sending failed due to Render SMTP Firewall:", mailErr.message);
+        console.error("❌ Email sending failed:", mailErr.message);
+        const err = new Error("Email sending failed. Check backend environment variables.");
+        err.statusCode = 500;
+        throw err;
       }
     } else {
-      console.warn("⚠️ EMAIL_USER or EMAIL_PASS not set in environment variables. Skipping email notification.");
+      console.warn("⚠️ EMAIL_USER or EMAIL_PASS not set in environment variables.");
+      const err = new Error("Email credentials not configured on the server.");
+      err.statusCode = 500;
+      throw err;
     }
     
     // Return 201 successfully so the frontend Contact form shows the "Message Sent" overlay
     res.status(201).json(msg);
   } catch (err) {
     console.error("🔥 Error in sendMessage:", err);
-    err.statusCode = 400;
+    err.statusCode = err.statusCode || 400;
     next(err);
   }
 };
