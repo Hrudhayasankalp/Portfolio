@@ -15,6 +15,8 @@ router.use("/projects", require("./portfolio/projects/projects.routes"));
 router.use("/contact", require("./portfolio/contact/contact.routes"));
 router.use("/education", require("./portfolio/education/education.routes"));
 router.use("/experience", require("./portfolio/experience/experience.routes"));
+router.use("/leetcode", require("./portfolio/leetcode/leetcode.routes"));
+router.use("/github", require("./portfolio/github/github.routes"));
 
 
 

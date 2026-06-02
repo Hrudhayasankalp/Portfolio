@@ -51,14 +51,14 @@ const Navbar = () => {
     { name: "Experience", path: "/#experience" },
     { name: "Education", path: "/#education" },
     { name: "Projects", path: "/projects" },
+    { name: "Coding Profiles", path: "/coding" },
     { name: "Contact", path: "/contact" },
   ];
 
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled || isMobileMenuOpen ? "glass py-4 shadow-lg" : "bg-transparent py-4 md:py-6"
-      }`}
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled || isMobileMenuOpen ? "glass py-4 shadow-lg" : "bg-transparent py-4 md:py-6"
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold tracking-tighter">
@@ -99,7 +99,7 @@ const Navbar = () => {
 
         {/* Mobile Nav Toggle */}
         <div className="md:hidden flex items-center">
-          <button 
+          <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="text-gray-300 hover:text-white focus:outline-none p-2"
             aria-label="Toggle Menu"
@@ -130,17 +130,16 @@ const Navbar = () => {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`text-lg font-medium transition-colors ${
-                    location.pathname === link.path || (location.pathname === '/' && location.hash === link.path.substring(1))
-                      ? "text-blue-500"
-                      : "text-gray-300 hover:text-white"
-                  }`}
+                  className={`text-lg font-medium transition-colors ${location.pathname === link.path || (location.pathname === '/' && location.hash === link.path.substring(1))
+                    ? "text-blue-500"
+                    : "text-gray-300 hover:text-white"
+                    }`}
                 >
                   {link.name}
                 </Link>
               ))}
               <a
-                href="/resume.pdf"
+                href="D:/project/portfolio/frontend/public/resume.docx"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full max-w-[200px] text-center px-5 py-3 rounded-xl border border-gray-700 bg-gray-800/50 text-white font-medium"

@@ -13,7 +13,11 @@ function Profile() {
     github: "",
     linkedin: "",
     website: "",
-    avatar: ""
+    avatar: "",
+    leetcodeUsername: "",
+    githubUsername: "",
+    geeksforgeeksUsername: "",
+    geeksforgeeks: ""
   });
 
   const fetchProfile = async () => {
@@ -29,7 +33,11 @@ function Profile() {
           github: res.data.github || "",
           linkedin: res.data.linkedin || "",
           website: res.data.website || "",
-          avatar: res.data.avatar || ""
+          avatar: res.data.avatar || "",
+          leetcodeUsername: res.data.leetcodeUsername || "",
+          githubUsername: res.data.githubUsername || "",
+          geeksforgeeksUsername: res.data.geeksforgeeksUsername || "",
+          geeksforgeeks: res.data.geeksforgeeks || ""
         });
       }
     } catch (err) {
@@ -113,6 +121,22 @@ function Profile() {
                   <span className="font-semibold text-gray-800 w-24">LinkedIn:</span>
                   <a href={profile.linkedin} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">{profile.linkedin || "N/A"}</a>
                 </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <span className="font-semibold text-gray-800 w-24">GitHub User:</span>
+                  <span className="text-gray-900">{profile.githubUsername || "N/A"}</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <span className="font-semibold text-gray-800 w-24">LeetCode User:</span>
+                  <span className="text-gray-900">{profile.leetcodeUsername || "N/A"}</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <span className="font-semibold text-gray-800 w-24">GFG User:</span>
+                  <span className="text-gray-900">{profile.geeksforgeeksUsername || "N/A"}</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <span className="font-semibold text-gray-800 w-24">GFG Link:</span>
+                  <a href={profile.geeksforgeeks} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">{profile.geeksforgeeks || "N/A"}</a>
+                </div>
               </div>
             </div>
           </div>
@@ -157,6 +181,26 @@ function Profile() {
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Personal Website</label>
                 <input type="url" name="website" value={formData.website} onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-gray-50" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">GitHub Username</label>
+                <input type="text" name="githubUsername" value={formData.githubUsername} onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-gray-50" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">LeetCode Username</label>
+                <input type="text" name="leetcodeUsername" value={formData.leetcodeUsername} onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-gray-50" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">GeeksforGeeks Username</label>
+                <input type="text" name="geeksforgeeksUsername" value={formData.geeksforgeeksUsername} onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-gray-50" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">GeeksforGeeks Profile Link</label>
+                <input type="url" name="geeksforgeeks" value={formData.geeksforgeeks} onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-gray-50" />
               </div>
             </div>

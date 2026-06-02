@@ -10,6 +10,7 @@ import Experience from "./pages/Experience";
 import Education from "./pages/Education";
 import Profile from "./pages/Profile";
 import Messages from "./pages/Messages";
+import Coding from "./pages/Coding";
 import Layout from "./components/Layout";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/education" element={<Education />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/messages" element={<Messages />} />
+        <Route path="/coding" element={<Coding />} />
       </Route>
     </Routes>
   );

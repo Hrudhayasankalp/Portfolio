@@ -7,6 +7,7 @@ const Sidebar = () => {
   const navItems = [
     { label: "Dashboard", path: "/dashboard", icon: "📊" },
     { label: "Profile", path: "/profile", icon: "👤" },
+    { label: "Coding Profiles", path: "/coding", icon: "💻" },
     { label: "Skills", path: "/skills", icon: "⚡" },
     { label: "Projects", path: "/project", icon: "🚀" },
     { label: "Experience", path: "/experience", icon: "💼" },

@@ -10,6 +10,10 @@ const ProfileSchema = new mongoose.Schema(
     linkedin: { type: String },
     website: { type: String },
     avatar: { type: String }, // URL to image
+    leetcodeUsername: { type: String, default: "sankalp_nrnh" },
+    githubUsername: { type: String, default: "Hrudhayasankalp" },
+    geeksforgeeksUsername: { type: String, default: "" },
+    geeksforgeeks: { type: String, default: "" },
   },
   { timestamps: true }
 );
