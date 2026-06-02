@@ -12,6 +12,10 @@ exports.getGitHubStats = async (username) => {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
   };
 
+  if (process.env.GITHUB_TOKEN) {
+    headers["Authorization"] = `token ${process.env.GITHUB_TOKEN}`;
+  }
+
   try {
     // 1. Fetch Profile Info
     const profileRes = await axios.get(userUrl, { headers, timeout: 5000 });
@@ -144,20 +148,16 @@ exports.getGitHubStats = async (username) => {
     // Provide a beautiful fallback so that the page is robust in case of rate-limits
     return {
       username: username,
-      avatar: "https://avatars.githubusercontent.com/u/103986060?v=4",
-      name: "Hrudhaya Sankalp Putluru",
-      followers: 8,
-      following: 12,
-      publicRepos: 6,
-      totalStars: 4,
-      totalCommits: 84,
-      currentStreak: 2,
-      longestStreak: 8,
-      languages: [
-        { language: "JavaScript", count: 4, percentage: 57.1 },
-        { language: "HTML", count: 2, percentage: 28.6 },
-        { language: "CSS", count: 1, percentage: 14.3 }
-      ],
+      avatar: `https://github.com/${username}.png` || "https://github.com/identicons/default.png",
+      name: username,
+      followers: 0,
+      following: 0,
+      publicRepos: 0,
+      totalStars: 0,
+      totalCommits: 0,
+      currentStreak: 0,
+      longestStreak: 0,
+      languages: [],
       calendar: generateMockCalendar(),
       profileUrl: `https://github.com/${username}`,
       isMock: true
